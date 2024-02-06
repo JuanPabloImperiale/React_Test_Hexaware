@@ -20,6 +20,9 @@ const Test = () => {
   // add action to remove item from list
   const removeItem = () => {};
 
+  // add action to add item to list
+  const addItem = () => {};
+
   // review code and figure out how to enhance it
   // display cards in a 2 x 2 grid
   return (
