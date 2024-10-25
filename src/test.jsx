@@ -17,6 +17,12 @@ const Test = () => {
     { id: 3, name: "Item 1", price: 30 },
   ]);
 
+  console.log(
+    items.filter((item) => {
+      return item.id !== 2;
+    })
+  );
+
   // add action to remove item from list
   const removeItem = () => {};
 
