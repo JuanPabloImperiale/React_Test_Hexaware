@@ -1,68 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import {
   Typography,
-  List,
-  ListItem,
   Card,
   CardContent,
   CardActions,
   Button,
+  Grid,
 } from "@mui/material";
+
+const arrayTest = [
+  { id: 1, name: "Item 2", price: 10 },
+  { id: 2, name: "Item 3", price: 20 },
+  { id: 3, name: "Item 1", price: 30 },
+];
+
+const orderArray = (array) => {
+  array.sort(function (a, b) {
+    return a.name.localeCompare(b.name);
+  });
+  return array;
+};
 
 const Test = () => {
   // order items by name
-  const [items, setItems] = useState([
-    { id: 1, name: "Item 2", price: 10 },
-    { id: 2, name: "Item 3", price: 20 },
-    { id: 3, name: "Item 1", price: 30 },
-  ]);
+  const [items, setItems] = useState([]);
 
-  console.log(
-    items.filter((item) => {
-      return item.id !== 2;
-    })
-  );
+  useLayoutEffect(() => {
+    let orderArray2 = orderArray(arrayTest);
+    setItems(orderArray2);
+  }, []);
 
   // add action to remove item from list
-  const removeItem = () => {};
+  const removeItem = (id) => {
+    const newItems = items.filter((item) => item.id != id);
+    setItems(newItems);
+  };
 
   // add action to add item to list
-  const addItem = () => {};
+  const addItem = () => {
+    let newid = 0;
+    for (const item of items) {
+      let idCompare = newid > item.id ? newid : item.id + 1;
+      newid = idCompare;
+    }
+    console.log("new id", newid);
+    let newItem = { id: newid, name: "Item " + newid, price: newid * 10 };
+    const newItems = [...items, newItem];
+    setItems(newItems);
+  };
 
-  // review code and figure out how to enhance it
-  // display cards in a 2 x 2 grid
   return (
-    <List>
-      <ListItem key={items[0].id}>
-        <Card key={items[0].id} style={{ marginBottom: "10px" }}>
-          <CardContent>
-            <Typography variant="h6">{items[0].name}</Typography>
-            <Typography variant="body1">${items[0].price}</Typography>
-          </CardContent>
-          <CardActions>{"something goes here"}</CardActions>
-        </Card>
-      </ListItem>
-
-      <ListItem key={items[1].id}>
-        <Card key={items[1].id} style={{ marginBottom: "10px" }}>
-          <CardContent>
-            <Typography variant="h6">{items[1].name}</Typography>
-            <Typography variant="body1">${items[1].price}</Typography>
-          </CardContent>
-          <CardActions>{"something goes here"}</CardActions>
-        </Card>
-      </ListItem>
-
-      <ListItem key={items[2].id}>
-        <Card key={items[2].id} style={{ marginBottom: "10px" }}>
-          <CardContent>
-            <Typography variant="h6">{items[2].name}</Typography>
-            <Typography variant="body1">${items[2].price}</Typography>
-          </CardContent>
-          <CardActions>{"something goes here"}</CardActions>
-        </Card>
-      </ListItem>
-    </List>
+    items && (
+      <div>
+        <Button onClick={addItem}>Add Item</Button>
+        <Grid container spacing={2}>
+          {items.map((item) => (
+            <Grid item xs={6} key={item.id}>
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <Typography variant="h6">{item.name}</Typography>
+                  <Typography variant="body1">${item.price}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button onClick={() => removeItem(item.id)}>Delete</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+    )
   );
 };
 
